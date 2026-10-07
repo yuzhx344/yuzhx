@@ -1,0 +1,55 @@
+name: fleetops
+services:
+  app:
+    build:
+      context: ..
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      APP_ORIGIN: https://${APP_DOMAIN:?先运行部署初始化脚本配置域名}
+      TRUST_PROXY: "1"
+      FLEETOPS_DB: /app/var/fleetops.sqlite
+      FLEETOPS_SETUP_TOKEN_FILE: /run/secrets/setup_token
+    secrets:
+      - setup_token
+    volumes:
+      - fleetops_data:/app/var
+    expose:
+      - "3000"
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:mode=1777
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+  gateway:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN:?先配置域名}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      app:
+        condition: service_healthy
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+secrets:
+  setup_token:
+    file: ./secrets/setup-token.txt
+volumes:
+  fleetops_data:
+  caddy_data:
+  caddy_config:

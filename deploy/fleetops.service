@@ -1,0 +1,21 @@
+[Unit]
+Description=FleetOps vehicle incident management
+After=network.target
+
+[Service]
+Type=simple
+User=fleetops
+Group=fleetops
+WorkingDirectory=/opt/fleetops
+EnvironmentFile=/etc/fleetops.env
+ExecStart=/usr/bin/node /opt/fleetops/server/index.js
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/fleetops/var
+
+[Install]
+WantedBy=multi-user.target

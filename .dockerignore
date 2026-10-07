@@ -1,0 +1,14 @@
+node_modules
+dist
+.git
+var
+test-results
+playwright-report
+deploy/secrets
+deploy/backups
+deploy/.env
+.env*
+*.log
+release
+tests
+playwright.config.js
