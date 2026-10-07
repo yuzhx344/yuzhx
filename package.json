@@ -1,12 +1,13 @@
 {
   "name": "fleetops",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "node scripts/dev.mjs",
     "build": "vite build",
     "start": "node server/index.js",
+    "open": "node scripts/open-local.mjs",
     "preview": "npm run start",
     "test": "node --test tests/backend.test.js",
     "test:e2e": "npm run build && playwright test",
